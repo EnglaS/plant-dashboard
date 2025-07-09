@@ -19,6 +19,7 @@ The Intelligent Plant Monitor is a simple IoT system designed to measure and vis
 | Wires | As needed | Wires male/male        | 52.00 | [Wires male/male](https://www.electrokit.com/labbsladd-20-pin-15cm-hane/hane) |
 | Red LED | 1 | LED indicating too dry or wet soil | 5.00 | [LED red](https://www.electrokit.com/led-5mm-rod-diffus-1500mcd) |
 | Green LED | 1 | LED indicating soil moisture within recommeded values | 5.00 | [LED green](https://www.electrokit.com/led-5mm-pure-gron-diffus-4000mcd) |
+| Fixed resistor (330 Ω)                                                | 2         | For LED                        | 2.00 / resistor | [Resistor](https://www.electrokit.com/motstand-1w-5330ohm-330r)      |
 
 
 ## 3. Wiring Diagram
