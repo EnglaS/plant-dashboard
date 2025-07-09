@@ -18,7 +18,7 @@ The Intelligent Plant Monitor is a simple IoT system designed to measure and vis
 | Breadboard                                             | 1 | Solderless breadboard        | 69.00 | [Breadboard](https://www.electrokit.com/kopplingsdack-840-anslutningar) |
 | Wires | As needed | Wires male/male        | 52.00 | [Wires male/male](https://www.electrokit.com/labbsladd-20-pin-15cm-hane/hane) |
 | Red LED | 1 | LED indicating too dry or wet soil | 5.00 | [LED red](https://www.electrokit.com/led-5mm-rod-diffus-1500mcd) |
-| Green LED | 1 | LED indicating soil moisture within recommeded values | 5.00 | [LED green](https://www.electrokit.com/led-5mm-gron-diffus-1500mcd) |
+| Green LED | 1 | LED indicating soil moisture within recommeded values | 5.00 | [LED green](https://www.electrokit.com/led-5mm-pure-gron-diffus-1500mcd) |
 
 
 ## 3. Wiring Diagram
