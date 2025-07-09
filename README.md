@@ -329,3 +329,4 @@ This project successfully demonstrated a complete data pipeline: the Raspberry P
 - Chart.js docs: [https://www.chartjs.org/](https://www.chartjs.org/)
 - MQTT and umqtt.simple guide
 
+**Author:** Engla Sundström (es226if@student.lnu.se)
