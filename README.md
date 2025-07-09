@@ -1,37 +1,63 @@
 # Intelligent Plant Monitor – Basic Tutorial
 **Author:** Engla Sundström (es226if)  
+- [x] Estimated time: 2–3 hours
 
 ## 1. Introduction
 
-The Intelligent Plant Monitor is a simple IoT system designed to measure and visualize the health of a potted plant in real time. Using a Raspberry Pi Pico WH as the microcontroller platform, the project reads data from two analog sensors—a soil moisture sensor to track water content in the soil and a photoresistor to measure ambient light levels. Sensor readings are sent via MQTT to a Node.js server, which then broadcasts the data to a web dashboard built with Chart.js. The dashboard displays gauges and time‑series charts for both soil moisture and light intensity, allowing the user to easily observe trends and respond when conditions fall outside ideal ranges.
+## 1. Introduction & Objectives  
+**What**: A Wi‑Fi–connected plant monitoring system that tracks soil moisture and ambient light in real time, displaying live gauges and historical charts via a web dashboard.  
+**Why**: Over‑ and under‑watering are the leading causes of houseplant failure; by visualizing trends, users can water precisely and keep plants healthy.  
+**Insights**: Correlate watering schedules with plant health, and extend the system with additional sensors or automated controls.  
+
+**This tutorial guides you through:**  
+1. Hardware & wiring setup  
+2. CircuitPython code on Raspberry Pi Pico WH  
+3. Node.js/MQTT server configuration  
+4. Chart.js dashboard implementation
 
 ![image](https://github.com/user-attachments/assets/0540391e-7d19-4389-a0c4-bcaafaf72542)
 
+---
 
 ## 2. Bill of Materials
 
 | Component            | Quantity | Description                         | Approx. Price (SEK) | Purchase Link |
 | -------------------- | -------- | ----------------------------------- | ------------------- | ------------- |
-| Raspberry Pi Pico WH | 1        | Microcontroller with built-in Wi-Fi | 99.00               | [Pico WH](https://www.electrokit.com/raspberry-pi-pico-wh)|
-| Soil moisture sensor                                                  | 1         | Analog moisture sensor (capacitive/ resistive) | 29.00 | [Soil Sensor](https://www.electrokit.com/jordfuktighetssensor)  |
-| Photoresistor (LDR)                                                   | 1         | Light-dependent resistor for measuring light   | 9.50 | [LDR](https://www.electrokit.com/fotomotstand-cds-4-7-kohm)         |
-| Fixed resistor (10 kΩ)                                                | 1         | For LDR voltage divider                        | 3.00 | [Resistor](https://www.electrokit.com/motstand-2w-10kohm-510k)      |
-| Breadboard                                             | 1 | Solderless breadboard        | 69.00 | [Breadboard](https://www.electrokit.com/kopplingsdack-840-anslutningar) |
-| Wires | As needed | Wires male/male        | 52.00 | [Wires male/male](https://www.electrokit.com/labbsladd-20-pin-15cm-hane/hane) |
-| Red LED | 1 | LED indicating too dry or wet soil | 5.00 | [LED red](https://www.electrokit.com/led-5mm-rod-diffus-1500mcd) |
-| Green LED | 1 | LED indicating soil moisture within recommeded values | 5.00 | [LED green](https://www.electrokit.com/led-5mm-pure-gron-diffus-4000mcd) |
-| Fixed resistor (330 Ω)                                                | 2         | For LED                        | 2.00 / resistor | [Resistor](https://www.electrokit.com/motstand-1w-5330ohm-330r)      |
+| Raspberry Pi Pico WH    | 1   | Microcontroller with built‑in Wi‑Fi              | 99.00               | [Electrokit](https://www.electrokit.com/raspberry-pi-pico-wh) |
+| Soil moisture sensor    | 1   | Analog capacitive/resistive moisture sensor      | 29.00               | [Electrokit](https://www.electrokit.com/jordfuktighetssensor) |
+| Photoresistor (LDR)     | 1   | Light‑dependent resistor for light measurement  | 9.50                | [Electrokit](https://www.electrokit.com/fotomotstand-cds-4-7-kohm) |
+| Resistor, 10 kΩ         | 1   | For LDR voltage divider                         | 3.00                | [Electrokit](https://www.electrokit.com/motstand-2w-10kohm-510k) |
+| Breadboard              | 1   | Solderless prototyping board                    | 69.00               | [Electrokit](https://www.electrokit.com/kopplingsdack-840-anslutningar) |
+| Jumper wires            | As needed | Male‑female jumpers for connections       | 52.00               | [Electrokit](https://www.electrokit.com/labbsladd-20-pin-15cm-hane/hane) |
+| **Red LED**             | 1   | Indicator: soil outside safe moisture range     | 5.00                | [Electrokit](https://www.electrokit.com/led-5mm-rod-diffus-1500mcd) |
+| **Green LED**           | 1   | Indicator: soil within safe moisture range      | 5.00                | [Electrokit](https://www.electrokit.com/led-5mm-pure-gron-diffus-4000mcd) |
+| Resistor, 330 Ω         | 2   | For LEDs                                        | 4.00 (2×2.00)       | [Electrokit](https://www.electrokit.com/motstand-1w-5330ohm-330r) |
 
+---
 
 ## 3. Wiring Diagram
 
 ![kopplingsschema](https://github.com/user-attachments/assets/32092bbb-c468-4e13-b9d5-288c146bf2bc)
 
-## 4. Software
+**Connections:**  
+1. **GP27 → Soil sensor Vout** (soil moisture)  
+2. **GP26 → LDR divider → 10 kΩ → GND** (light level)  
+3. **GP13 → 330 Ω → Red LED → GND**  
+4. **GP14 → 330 Ω → Green LED → GND**  
+5. **3.3 V & GND rails** to sensor Vcc/GND  
 
-### 4.1 CircuitPython Code on Pico
+Voltage divider for LDR:  
+> Vout = 3.3 V × (10 kΩ / (10 kΩ + R_LDR)) → maps to 0–3.3 V → 0–100 % light
 
-Explain how to flash MicroPython, and include the code snippet that:
+---
+
+## 4. Software Setup
+### 4.1 CircuitPython on Pico WH
+- **IDE:** Thonny (set interpreter to Raspberry Pi Pico CircuitPython)  
+- **Dependencies:** none (built‑in `machine`, `time`, `analogio` classes)
+- **Flash firmware:** Hold BOOTSEL, drag file to RPI‑RP2 drive.
+
+### 4.2 CircuitPython Code (code.py)
 
 ```python
 import time
@@ -130,10 +156,8 @@ while True:
     time.sleep(20)
 ```
 
-### 4.2 Node.js Server
-
-Outline how you set up your Express/Socket.io server, and show the key parts:
-
+### 4.3 Node.js + Socket.io Server
+(Full code here on GitHub)
 ```js
 import express from "express"
 import http from "http"
@@ -235,70 +259,22 @@ app.get('/api/history/light', (req, res) => res.json(lightHistory))
 srv.listen(3000, () => console.log('Server på http://localhost:3000'))
 ```
 
-### 4.3 Front-End Dashboard
+### 4.4 Front‑End Dashboard
+Embed full screenshot:  
 
-Show the HTML/JS that renders the gauge and time-series chart using Chart.js:
+![Dashboard](https://github.com/user-attachments/assets/e64d4a47-b9ad-4cca-a119-2b70c3515976)
 
-```html
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Plant Dashboard</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-  <header>
-    <h1>🌱 Intelligent Plant Dashboard</h1>
-  </header>
-  <main class="grid">
-    <!-- Soil Moisture -->
-    <section class="card">
-      <h2>Soil Moisture</h2>
-      <canvas id="gaugeSoil" width="300" height="150"></canvas>
-      <canvas id="chartSoil" width="600" height="300"></canvas>
-    </section>
+Key points:  
+- Chart.js gauges + time‑series charts  
+- Threshold coloring and animations  
+- Prototype info box for weather API  
+
+---
+
+## 5. Results & Demonstration  
+- Real‑time updates every 20 s (MQTT → WebSocket)  
+- LEDs provide immediate visual feedback on device  
   
-    <!-- Light Level -->
-    <section class="card">
-      <h2>Light Level</h2>
-      <canvas id="gaugeLight" width="300" height="150"></canvas>
-      <canvas id="chartLight" width="600" height="300"></canvas>
-    </section>
-  
-    <!-- Ambient Temperature -->
-    <section class="card">
-      <h2>Ambient Temperature</h2>
-      <!-- Text indicator -->
-      <div id="tempDisplay" class="temp-display">Loading…</div>
-      <canvas id="gaugeTemp" width="300" height="150"></canvas>
-    
-      <!-- Info box explaining prototype -->
-      <div class="info-box">
-        ℹ️ <strong>Prototype:</strong> Temp from OpenWeatherMap via your browser location, not Pico.
-      </div>
-    </section>
-  </main>
-
-  <!-- Bibliotek -->
-  <script src="libs/chart.umd.min.js"></script>
-  <script src="libs/chartjs-adapter-date-fns.bundle.min.js"></script>
-  <script src="libs/socket.io.min.js"></script>
-
-  <!-- Egen kod -->
-  <script type="module" src="js/main.js"></script>
-</body>
-</html>
-```
-
-## 5. Results
-
-- **Screenshot of gauge and chart** showing live data.
-  
-  ![image](https://github.com/user-attachments/assets/e64d4a47-b9ad-4cca-a119-2b70c3515976)
-
-- **LED functionality** a LED indicating a well watered plant.
-
   ![image](https://github.com/user-attachments/assets/4fe4bbca-3b5c-4885-8e20-75eefddd8b3a)
 
 
@@ -324,12 +300,10 @@ This project successfully demonstrated a complete data pipeline: the Raspberry P
 
 * Migrate data storage from in‑memory arrays to a time‑series database (e.g., InfluxDB) for long‑term analytics.
 
+---
+
 ## 7. References
-
-- Adafruit IO documentation: [https://io.adafruit.com](https://io.adafruit.com)
-- Chart.js docs: [https://www.chartjs.org/](https://www.chartjs.org/)
-- MQTT and umqtt.simple guide
-
---------------------------
-
-**Author:** Engla Sundström (es226if@student.lnu.se)
+- Adafruit IO docs: https://io.adafruit.com  
+- Chart.js: https://www.chartjs.org  
+- MQTT fundamentals: https://mqtt.org  
+- Raspberry Pi Pico MicroPython: https://www.raspberrypi.org/documentation/microcontrollers/micropython.html  
