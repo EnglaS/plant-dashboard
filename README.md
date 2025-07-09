@@ -2,6 +2,8 @@
 **Author:** Engla Sundström (es226if)  
 - [x] Estimated time: 2–3 hours
 
+![image](https://github.com/user-attachments/assets/0540391e-7d19-4389-a0c4-bcaafaf72542)
+
 ## 1. Introduction & Objectives  
 **What**: A Wi‑Fi–connected plant monitoring system that tracks soil moisture and ambient light in real time, displaying live gauges and historical charts via a web dashboard.  
 **Why**: Over‑ and under‑watering are the leading causes of houseplant failure; by visualizing trends, users can water precisely and keep plants healthy.  
@@ -12,8 +14,6 @@
 2. CircuitPython code on Raspberry Pi Pico WH  
 3. Node.js/MQTT server configuration  
 4. Chart.js dashboard implementation
-
-![image](https://github.com/user-attachments/assets/0540391e-7d19-4389-a0c4-bcaafaf72542)
 
 ---
 
