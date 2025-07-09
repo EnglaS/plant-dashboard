@@ -28,28 +28,105 @@ The Intelligent Plant Monitor is a simple IoT system designed to measure and vis
 
 ## 4. Software
 
-### 4.1 MicroPython Code on Pico
+### 4.1 CircuitPython Code on Pico
 
 Explain how to flash MicroPython, and include the code snippet that:
 
 ```python
-import network
 import time
-from machine import ADC, Pin
-from umqtt.simple import MQTTClient
+import wifi
+import socketpool
+from analogio import AnalogIn
+import board
+import digitalio 
+from adafruit_minimqtt.adafruit_minimqtt import MQTT   # OBS: så importerar du MQTT-klassen
+import keys   # WIFI_SSID, WIFI_PASS, ADAFRUIT_IO_USERNAME, ADAFRUIT_IO_KEY, FEED_KEY
 
-# WiFi and Adafruit IO credentials
-WIFI_SSID = "<your_ssid>"
-WIFI_PASS = "<your_password>"
-AIO_USER = "<aio_username>"
-AIO_KEY  = "<aio_key>"
-FEED     = f"{AIO_USER}/feeds/soil"
+# 1) WiFi
+print("Connecting to WiFi…")
+wifi.radio.connect(keys.WIFI_SSID, keys.WIFI_PASS)
+print("WiFi connected, IP =", wifi.radio.ipv4_address)
 
-# Connect to Wi-Fi
-# ...
+# 2) SocketPool (utan SSL på port 1883)
+pool = socketpool.SocketPool(wifi.radio)
 
-# Read sensor and publish to Adafruit IO via MQTT
-# ...
+# 3) MQTT-klient mot Adafruit IO
+mqtt = MQTT(
+    broker="io.adafruit.com",
+    port=1883,
+    username=keys.ADAFRUIT_IO_USERNAME,
+    password=keys.ADAFRUIT_IO_KEY,
+    client_id = keys.ADAFRUIT_IO_USERNAME,
+    socket_pool=pool
+)
+
+# --- 4) Anslut en gång ---
+print("Connecting to MQTT broker…")
+mqtt.connect()
+print("MQTT connected!")
+
+# --- Sensorer ---
+soil_sensor  = AnalogIn(board.GP27)
+light_sensor = AnalogIn(board.GP26)
+
+# torr: 65535
+#våt (mättad jord): 11858
+
+# --- 6) Loop: läs & publicera ---
+# kalibreringsvärden:
+raw_dry = 65535
+raw_wet = 0
+raw_dark = 60000   # när det är helt mörkt
+raw_bright = 10000 # när det är fullt ljust
+
+# Topics
+soil_topic  = f"{keys.ADAFRUIT_IO_USERNAME}/feeds/{keys.FEED_KEY}"
+light_topic = f"{keys.ADAFRUIT_IO_USERNAME}/feeds/{keys.LIGHT_FEED_KEY}"
+
+# --- LED Setup, pins and thresholds ---
+led_red   = digitalio.DigitalInOut(board.GP13)
+led_green = digitalio.DigitalInOut(board.GP14)
+for led in (led_red, led_green):
+    led.direction = digitalio.Direction.OUTPUT
+
+LOW_THRESH  = 35   # below dry 
+HIGH_THRESH = 80   # above wet
+
+def update_leds(m):
+    # Om m är under LOW eller över HIGH → utanför safe zone
+    outside = (m < LOW_THRESH) or (m > HIGH_THRESH)
+    led_red.value   = outside       # tänd röd LED när utanför
+    led_green.value = not outside   # (valfritt) tänd grön LED när innanför
+
+
+def scale(raw, lo, hi):
+    """Skalar raw‐värde från [lo..hi] till 0–100 %."""
+    frac = (raw - lo) / (hi - lo)
+    if frac < 0: frac = 0.0
+    if frac > 1: frac = 1.0
+    return int(frac * 100)
+
+while True:
+    # Jordfuktighet
+    raw_soil = soil_sensor.value
+    soil_pct = scale(raw_soil, raw_wet, raw_dry)  
+    print(f"Soil: {soil_pct}% (raw={raw_soil})")
+    update_leds(soil_pct)  
+    try:
+        mqtt.publish(soil_topic, str(soil_pct), retain=True)
+    except Exception as e:
+        print("Soil publish failed:", e)
+
+    # Ljusstyrka
+    raw_light = light_sensor.value
+    light_pct = scale(raw_light, raw_bright, raw_dark)
+    print(f"Light: {light_pct}% (raw={raw_light})")
+    try:
+        mqtt.publish(light_topic, str(light_pct), retain=True)
+    except Exception as e:
+        print("Light publish failed:", e)
+
+    time.sleep(20)
 ```
 
 ### 4.2 Node.js Server
