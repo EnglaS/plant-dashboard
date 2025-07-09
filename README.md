@@ -1,4 +1,5 @@
 # Intelligent Plant Monitor – Basic Tutorial
+**Author:** Engla Sundström (es226if)  
 
 ## 1. Introduction
 
