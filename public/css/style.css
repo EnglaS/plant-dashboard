@@ -1,0 +1,42 @@
+/* Reset + grund */
+* { box-sizing: border-box; margin:0; padding:0; }
+body { background:#111; color:#eee; font-family:sans-serif; }
+header { text-align:center; padding:20px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px,1fr));
+  gap: 20px;
+  padding: 20px;
+}
+.card {
+  background:#222; 
+  border-radius:8px; 
+  box-shadow:0 2px 8px rgba(0,0,0,0.5);
+  padding:20px;
+  text-align:center;
+}
+.card h2 {
+  margin-bottom:10px;
+}
+canvas { max-width:100%; }
+
+.temp-display {
+  font-size: 1.1rem;
+  color: #ffeb3b;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.info-box {
+  background: rgba(255, 235, 59, 0.1); /* pale yellow */
+  color: #eee;
+  border-left: 4px solid #ffeb3b;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  margin-top: 12px;
+  border-radius: 4px;
+}
+
+.info-box strong {
+  color: #ffeb3b;
+}

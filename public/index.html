@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Plant Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1>🌱 Intelligent Plant Dashboard</h1>
+  </header>
+  <main class="grid">
+    <!-- Soil Moisture -->
+    <section class="card">
+      <h2>Soil Moisture</h2>
+      <canvas id="gaugeSoil" width="300" height="150"></canvas>
+      <canvas id="chartSoil" width="600" height="300"></canvas>
+    </section>
+  
+    <!-- Light Level -->
+    <section class="card">
+      <h2>Light Level</h2>
+      <canvas id="gaugeLight" width="300" height="150"></canvas>
+      <canvas id="chartLight" width="600" height="300"></canvas>
+    </section>
+  
+    <!-- Ambient Temperature -->
+    <section class="card">
+      <h2>Ambient Temperature</h2>
+      <!-- Text indicator -->
+      <div id="tempDisplay" class="temp-display">Loading…</div>
+      <canvas id="gaugeTemp" width="300" height="150"></canvas>
+    
+      <!-- Info box explaining prototype -->
+      <div class="info-box">
+        ℹ️ <strong>Prototype:</strong> Temp from OpenWeatherMap via your browser location, not Pico.
+      </div>
+    </section>
+  </main>
+
+  <!-- Bibliotek -->
+  <script src="libs/chart.umd.min.js"></script>
+  <script src="libs/chartjs-adapter-date-fns.bundle.min.js"></script>
+  <script src="libs/socket.io.min.js"></script>
+
+  <!-- Egen kod -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
