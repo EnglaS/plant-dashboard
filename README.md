@@ -264,7 +264,10 @@ srv.listen(3000, () => console.log('Server på http://localhost:3000'))
 Key points:  
 - Chart.js gauges + time‑series charts  
 - Threshold coloring and animations  
-- Prototype info box for weather API  
+- Prototype info box for weather API
+
+  ![image](https://github.com/user-attachments/assets/f20127c5-6b60-4b8f-b9e1-a3d15c9603a2)
+
 
 ---
 
