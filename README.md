@@ -20,49 +20,7 @@ The Intelligent Plant Monitor is a simple IoT system designed to measure and vis
 
 ## 3. Wiring Diagram
 
-Below is an overview of all connections on the breadboard. Components are placed roughly at columns 30 and 46, with power rails on the top (3.3 V) and bottom (GND).
-
-| Component | Pin/Leg | Breadboard Position | Connected To |
-| --------- | ------- | ------------------- | ------------ |
-| **Soil moisture sensor** | **AO**  | 30 e | Pico GP26 (ADC0)       |
-|                          | **DO**  | 30 g | (optional digital out) |
-|                          | **GND** | 30 h | Pico GND               |
-|                          | **VCC** | 30 j | Pico 3.3 V             |
-| **Photoresistor (LDR)**  | Leg 1   | 46 j | 3.3 V rail             |
-|                          | Leg 2   | 46 h | Junction (ADC input)   |
-| **Fixed resistor**       | Leg 1   | 46 h | Junction (ADC input)   |
-|                          | Leg 2   | 46 i | GND rail               |
-| **Yellow wire**          | –       | 46 h | Pico GP27 (ADC1)       |
-
-> **Note:** Holes 46 h/j/i form a voltage divider: 3.3 V → LDR → junction (ADC) → resistor → GND.
-
-### ASCII Schematic
-
-```
-        Breadboard overview (columns 25–50)
-
-           25    30            45       46    50
-         ┌─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐
-power a: │+ │+ │+ │+ │+ │+ │+ │+ │+ │+ │
-rail  b: │- │- │- │- │- │- │- │- │- │- │
-         └─┴─┴─┴─┴─┴─┴─┴─┴─┴─┴─┘
-
-Soil moisture sensor at column 30 (rows e–j):
-   30e ─── AO ──> Pico GP26 (ADC0)
-   30g ─── DO ──> (optional digital output)
-   30h ─── GND ──> Pico GND
-   30j ─── VCC ──> Pico 3.3 V
-
-LDR + resistor (voltage divider) at column 46:
-   46j ─── ○ LDR ○ ──┐
-                     │
-   46h ───●──────────┼──> Junction / ADC input (yellow wire)
-   (LDR leg 2)      │
-                     └─[ Resistor ]─┐
-   46i ──────────────○             └─> GND rail
-```
-
-*Use this diagram to draw a neat Fritzing or diagrams.net schematic for your report.*
+![kopplingsschema](https://github.com/user-attachments/assets/32092bbb-c468-4e13-b9d5-288c146bf2bc)
 
 ## 4. Software
 
