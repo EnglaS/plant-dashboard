@@ -218,7 +218,9 @@ Show the HTML/JS that renders the gauge and time-series chart using Chart.js:
 - **Screenshot of gauge and chart** showing live data.
   ![image](https://github.com/user-attachments/assets/e64d4a47-b9ad-4cca-a119-2b70c3515976)
 
-- **Console logs** demonstrating data flow from Pico → server → browser.
+- **LED functionality** demonstrating a LED indicating a well watered plant.
+  ![image](https://github.com/user-attachments/assets/4fe4bbca-3b5c-4885-8e20-75eefddd8b3a)
+
 
 ## 6. Conclusion
 
