@@ -258,7 +258,6 @@ srv.listen(3000, () => console.log('Server på http://localhost:3000'))
 ```
 
 ### 4.4 Front‑End Dashboard
-Embed full screenshot:  
 
 ![Dashboard](https://github.com/user-attachments/assets/e64d4a47-b9ad-4cca-a119-2b70c3515976)
 
