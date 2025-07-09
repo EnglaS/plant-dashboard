@@ -2,8 +2,6 @@
 **Author:** Engla Sundström (es226if)  
 - [x] Estimated time: 2–3 hours
 
-## 1. Introduction
-
 ## 1. Introduction & Objectives  
 **What**: A Wi‑Fi–connected plant monitoring system that tracks soil moisture and ambient light in real time, displaying live gauges and historical charts via a web dashboard.  
 **Why**: Over‑ and under‑watering are the leading causes of houseplant failure; by visualizing trends, users can water precisely and keep plants healthy.  
